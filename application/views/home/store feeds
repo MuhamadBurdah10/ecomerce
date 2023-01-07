@@ -1,0 +1,60 @@
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+	 ROLLBACK; /*untuk membatalkan proses query jika ada gangguan*/
+	END;
+
+	/*getting feed data myself */
+select user_id, fullname, picture, feed_id, feed_status, feed_ispublic, feed_isactivity, feed_date, feed_type, feed_typeData, feed_activity_name, feed_activity_id, feed_totalLove, feed_totalComment, feed_isloved, link_user
+from (
+	(select a.user_id, CONCAT(a.firstname,' ',(case when a.middlename is not null then a.middlename else ' ' end),a.lastname) as fullname, a.picture
+	,b.feed_id, b.feeds as feed_status, b.ispublic as feed_ispublic, b.isactivity as feed_isactivity, b.created as feed_date, b.typeData as feed_typeData, b.type as feed_type
+	,(select m.datatype from mention_feeds m where m.feed_id = b.feed_id and b.isactivity = 'Y') as feed_activity_name
+	,(select m.dataid from mention_feeds m where m.feed_id = b.feed_id and b.isactivity = 'Y') as feed_activity_id
+	,(select count(l.love_id) from loves l where l.type = 'feeds' and l.type_id = b.feed_id) as feed_totalLove
+	,(select count(c.comment_id) from comments c where c.type = 'feeds' and c.type_id = b.feed_id) as feed_totalComment
+	,(select l.love_id from loves l where l.type = 'feeds' and l.type_id = b.feed_id and l.user_id = user_id) as feed_isloved
+	,(select CONCAT('user/show/',a.user_id,'-',REPLACE(a.username,'.','-') )) as link_user
+
+	from users a 
+	left join feeds b on b.user_id = a.user_id
+	where a.user_id = user_id and a.isactive = 1 and b.ispublic = 'Y'
+  order by b.created desc )
+
+	union
+	/*getting feed myfriends*/
+	(select b.user_id, CONCAT(b.firstname,' ',(case when b.middlename is not null then b.middlename else ' ' end),b.lastname) as fullname, b.picture
+	,c.feed_id, c.feeds as feed_status, c.ispublic as feed_ispublic, c.isactivity as feed_isactivity, c.created as feed_date, c.typeData as feed_typeData, c.type as feed_type
+	,(select m.datatype from mention_feeds m where m.feed_id = c.feed_id and c.isactivity = 'Y') as feed_activity_name
+	,(select m.dataid from mention_feeds m where m.feed_id = c.feed_id and c.isactivity = 'Y') as feed_activity_id
+	,(select count(l.love_id) from loves l where l.type = 'feeds' and l.type_id = c.feed_id) as feed_totalLove
+	,(select count(c.comment_id) from comments c where c.type = 'feeds' and c.type_id = c.feed_id) as feed_totalComment
+	,(select l.love_id from loves l where l.type = 'feeds' and l.type_id = c.feed_id and l.user_id = user_id) as feed_isloved
+	,(select CONCAT('user/show/',b.user_id,'-',REPLACE(b.username,'.','-') )) as link_user
+
+	from friends a 
+	join users b on b.user_id =  (case when (a.user_friend_id = user_id) then a.user_id else a.user_friend_id end)
+	left join feeds c on c.user_id = b.user_id
+	where (a.user_id = user_id or a.user_friend_id = user_id) and a.isaccepted = 1  and b.isactive = 1 and c.ispublic = 'Y'
+	order by c.created desc)
+
+	union 
+	/*getting feed following*/
+	( select b.user_id, CONCAT(b.firstname,' ',(case when b.middlename is not null then b.middlename else ' ' end),b.lastname) as fullname , b.picture 
+	,c.feed_id, c.feeds as feed_status, c.ispublic as feed_ispublic, c.isactivity as feed_isactivity, c.created as feed_date, c.typeData as feed_typeData, c.type as feed_type
+	,(select m.datatype from mention_feeds m where m.feed_id = c.feed_id and c.isactivity = 'Y') as feed_activity_name
+	,(select m.dataid from mention_feeds m where m.feed_id = c.feed_id and c.isactivity = 'Y') as feed_activity_id
+	,(select count(l.love_id) from loves l where l.type = 'feeds' and l.type_id = c.feed_id) as feed_totalLove
+	,(select count(c.comment_id) from comments c where c.type = 'feeds' and c.type_id = c.feed_id) as feed_totalComment
+	,(select l.love_id from loves l where l.type = 'feeds' and l.type_id = c.feed_id and l.user_id = user_id) as feed_isloved
+	,(select CONCAT('user/show/',b.user_id,'-',REPLACE(b.username,'.','-') )) as link_user
+	
+	from user_follow_author a
+	join users b on b.user_id = a.author_id
+	left join feeds c on c.user_id = b.user_id
+	where a.user_id= user_id and a.isblock != 1 and b.isactive = 1 and c.ispublic = 'Y'
+	order by c.created desc)
+) results
+order by feed_date desc;
+
+END

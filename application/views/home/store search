@@ -1,0 +1,41 @@
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+	 ROLLBACK; /*untuk membatalkan proses query jika ada gangguan*/
+	END;
+
+ 
+select id, name, picture, link
+	from (
+		(select a.book_id as id, a.title as name, a.cover as picture, CONCAT('book/show/',a.code,'/',REPLACE(a.title,' ','-') )as link 
+		 from books a 
+		 where (a.title like CONCAT("%" , keyword , "%" ) )
+		 or (a.alternate like CONCAT("%" , keyword , "%" ) )
+		 or (a.synopsis like CONCAT("%" , keyword , "%" ) )
+		 or (a.publisher like CONCAT("%" , keyword , "%" ) )
+		 or (a.series_book like CONCAT("%" , keyword , "%" ) )
+		)
+		
+		UNION
+		(
+			select id, name, picture, link
+			from (
+				(select a.user_id as id, CONCAT(a.firstname,' ',a.middlename,' ',a.lastname) as name, a.picture, CONCAT('user/show/',a.user_id,'-',REPLACE(a.username,'.','-') ) as link 
+				from users a 
+				where 
+				NOT EXISTS (select * from user_author b where b.user_id = a.user_id )
+				and ( (CONCAT(a.firstname,' ',a.middlename,' ',a.lastname) like CONCAT("%" , keyword , "%" )) or a.email like CONCAT("%" , keyword , "%" ) ) )
+				
+				union 
+				(select b.user_id as id, CONCAT(b.firstname,' ',b.middlename,' ',b.lastname) as name, b.picture, CONCAT('author/show/',b.user_id,'-',REPLACE(b.username,'.','-') ) as link 
+				from user_author a 
+				left join users b on b.user_id = a.user_id
+				where ( (CONCAT(b.firstname,' ',b.middlename,' ',b.lastname) like CONCAT("%" , keyword , "%" ))  or b.email like CONCAT("%" , keyword , "%" )  )
+				and a.isapproved = 1) 
+			) join_user
+			order by id asc
+		)
+	) results
+	order  by name asc ;
+
+END

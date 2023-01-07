@@ -1,0 +1,115 @@
+1/10/2019
+nambahin link user : views/home/feeds line : 80
+nambahin link_user : controllers/feeds line : 55
+ubah file views/authors/widget-tab/books/review.php
+controllers/author.php : tambah detail review line : function show 22 & 32 || 64 & 74
+views/author.php : line 133 ubah menjadi detail review
+ubah store procedure fetchmyfeedbyuserid
+
+menonaktifkan batch selection pada views/collections/user-collection/detail.php line : 128 - 134 && menjadikan grid sebagai active 121 & 448
+mengubah tab-pane jadi grid active line : 76 & 389 && menonaktifkan batch selection pada views/browse/section/section browse line : 94 - 99
+
+view/collection/show.php line  : menjadikan grid sebagai active line 81 & 406
+menambahkan auto reload pada views/widgets/new-collection-modal.php line : 35
+menambahkan auto reload pada views/collection/index.php line : line 230
+
+10/10/2019
+controllers/feeds.php line : 67 - 121 (tambah function fetchactivity)
+models/feeds/feed_model.php line : 36 - 42 (tambah function fetchactivity)
+views/users/widget-tab/activity/index.php : satu page
+tambah store procedure : fetchfeedactivity
+views/reviews/detail.php line : 110 - 112 (tambah link untuk foto)
+controllers/review.php line : 85 - 88 (tambah detail user)
+views/reviews/detail.php line : 96 - 123 (tambah comment)
+
+11/10/2019
+view/community/detail.php line : 290 - 363 (tambah collection)
+views/reviews/detail.php line : 320 - 393 (tambah collection)
+models/books/collectionuser.php line : 20 (merubah join untuk collection)
+views/books/widget-tab/review.php line : 442 - 445 (tambah button report)
+
+14/10/2019
+view/home/discussion.php line : 29 (tambah link buku)
+view/community/detail.php line : 242 (tambah link untuk user comment)
+controllers/comments.php line : 244 (tambah username pada function fetchdiscuss)
+view/reviews/detail.php line : 241 (tambah link untuk user comment)
+views/widget/book-modal.php line : 22 -34 (tambah buttton share)
+views/user/widget-tab/books/review.php line : 151 - 166 (tambah comment)
+views/authors/widget-tab/books/review.php line : 151 - 166 (tambah comment)
+
+15/10/2019
+views/community/index.php line : 386 (tambah modal book)
+views/community/index.php line : 117 (tambah link pada foto)
+views/widgets/new-collection-modal.php line : 14 - 37 (tambah validasi)
+
+16/10/2019
+controllers/master.php line : 189 - 215 (tambah function untuk status book di tab user)
+vies/collections/user-collection/list.php line : 38 - 64 (tambah status book)
+vies/collections/author-collection/list.php line : 42 - 70 (tambah status book)
+views/widgets/new-collection-modal.php line : 79 - 85 (tambah delay untuk reload)
+views/collection/index.php line : 232 - 235 (tambah delay untuk reload
+controller/user.php line : 71 (tambah meta di function tender)
+
+24/10/2019
+assets/angular/angular.controller.main.js line 170 : perubahan change book status
+coontrollers/book.php line : 846 : perubahan function change book status
+views/content_tmp/th.php line : 17 penambahan data-incollect
+tambahin preview di view_books
+
+28/10/2019
+views/books/detail.php line : 342 - 369 tambah preview book
+
+29/10/2019
+views/widget/book-modal.php line : 166 - 186 tambah preview book
+
+30/10/2019
+views/public_page/index.php line : 28 tambah username
+view/sign_up/index.php line : line 43 tambah username
+controllers/auth/function sign_up line : 123 - 127 tambah validasi username
+
+4/11/2019
+controllers/auth/function sign_up line : 91 - 162 ubah function sign_up
+views/user/edit.php line 49 - 69 : mengubah jadi fullname dan tambah username
+
+5/11/2019
+controllers/users.php/function edit line : 211 - 230 penambahan fullname
+
+7/11/2019
+views/collections/index.php line : 64 - 71 penambahan count
+controllers/collections.php/function index line : 65-71 tambah count buku
+models/book/collectionuser.php line : 147 - 150 line tambah function getabook
+views/widgets/list-collection.php line : 65 - 83 tambah js remove collection
+views/widgets/list-collection.php line : 84 - 116 tambah js untuk edit collection
+views/widgets/list-collection.php line : 36 - 47 tambah button untuk remove
+views/collections/show.php line : 400 - 411 tambah genre dan synopsis readmore
+views/collections/reading-status-book/activity.php line : 381 - 392 tambah genre dan synopsis dengan readmore
+
+8/11/2019
+views/browse/section/section.php line : 383 - 393 penambahan genre dan readmore synopsis 
+
+12/11/2019
+controllers/collections.php line : 324 - 335 penambahan function update_collection
+views/widgets/list-collection.php line : 20 - 22 penambahan id untuk sortable, 128 - 147 penambahan js untuk sortable
+
+13/11/2019
+controllers/collections.php line : 374 - 413 penambahan function fetchbelongstomewithbook_side
+model/collectionuser.php line : 15 - 24 penambahan function fetchAllMyActvCollection_side
+views/widgets/list-collection.php line : 19 - 56 ubah init
+
+25/11/2019
+views/widget/new-collection-modal.php line : 19 - 21 tambah pattern pada input 
+views/content_tmp/TH.php line : 73 - 74 tambah pattern pada input 
+
+28/11/2019
+store procedure fetchfeedactivity diubah
+store procedure fetchmyfeedactivitybyuserid diubah
+
+5/12/2019
+views/book/user/form.php line : 38 - 46 pengubahan var checkbox
+views/book/user/form.php line : 67 - 73 penmabahan untuk hapus list pilihan
+
+
+browse love myselfy : sudah grid dan hapus batch selection udah
+collection user : sudah grid active dan hapus batch selection
+
+------------------------------------------------------------------ (sudah push) ----------------------------------------------------

@@ -1,0 +1,27 @@
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+	 ROLLBACK; /*untuk membatalkan proses query jika ada gangguan*/
+	END;
+
+	/*getting feed data myself */
+select user_id, fullname, picture, feed_id, feed_status, feed_ispublic, feed_isactivity, feed_date, feed_type, feed_typeData, feed_activity_name, feed_activity_id, feed_totalLove, feed_totalComment, feed_isloved, user_status, username
+from (
+	(select a.user_id, CONCAT(a.firstname,' ',(case when a.middlename is not null then a.middlename else ' ' end),a.lastname) as fullname, a.picture
+	,b.feed_id, b.feeds as feed_status, b.ispublic as feed_ispublic, b.isactivity as feed_isactivity, b.created as feed_date, b.typeData as feed_typeData, b.type as feed_type
+	,(select m.datatype from mention_feeds m where m.feed_id = b.feed_id and b.isactivity = 'Y') as feed_activity_name
+	,(select m.dataid from mention_feeds m where m.feed_id = b.feed_id and b.isactivity = 'Y') as feed_activity_id
+	,(select count(l.love_id) from loves l where l.type = 'feeds' and l.type_id = b.feed_id) as feed_totalLove
+	,(select count(c.comment_id) from comments c where c.type = 'feeds' and c.type_id = b.feed_id) as feed_totalComment
+	,(select l.love_id from loves l where l.type = 'feeds' and l.type_id = b.feed_id and l.user_id = user_id) as feed_isloved
+	,(select k.user_author_id from user_author k where k.user_id = a.user_id) as user_status
+	,(select a.username) as username
+	from users a 
+	left join feeds b on b.user_id = a.user_id
+	where a.user_id = user_id and a.isactive = 1 and b.ispublic = 'Y'
+  order by b.created desc )
+
+) results
+order by feed_date desc;
+
+END
